@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 class GrapesjsServiceProvider extends ServiceProvider
 {
     protected $routeFilePath = '/routes/laravel-grapesjs.php';
-    protected $confiFilePath = 'laravel-grapesjs.php';
+    protected $configFilePath = 'laravel-grapesjs.php';
     protected $publicDirPath = 'vendor/laravel-grapesjs';
     protected $viewDirPath = 'views/vendor/laravel-grapesjs';
     protected $namespace = 'laravel-grapesjs';
@@ -67,7 +67,7 @@ class GrapesjsServiceProvider extends ServiceProvider
     protected function publishFiles()
     {
         $this->publishes([
-            __DIR__.'/config.php' => config_path($this->confiFilePath),
+            __DIR__.'/config.php' => config_path($this->configFilePath),
         ], [$this->namespace, 'config']);
 
         $this->publishes([
@@ -86,7 +86,7 @@ class GrapesjsServiceProvider extends ServiceProvider
 
     protected function setupViewDirectives()
     {
-        //To Handle error if there no icon defined for any template
+        //To Handle error if there's no icon defined for any template
         $this->app->singleton('template-icon', function($app){ 
             return new class {
                 public function url(){}

@@ -7,18 +7,17 @@ use DOMDocument;
 trait EditableTrait{
     public $placeholders = [];
 
-    protected function getModelClass($slugify = false): string
+    protected function getModelClass(bool $slugify = false): string
     {
         return $slugify ? str_replace('\\', '-', static::class) : static::class;
     }
 
-    protected function getModelBaseClass(){
+    protected function getModelBaseClass(): string
         $explode = explode('\\', $this->getModelClass()) ?? ['Item'];
         return end($explode);
     }
 
-    protected function getKeyValue()
-    {
+    protected function getKeyValue(): mixed
         return $this->{$this->getKeyName()};
     }
 
@@ -66,7 +65,8 @@ trait EditableTrait{
                 $attributes[$name] = $value;
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            // Log the error but continue with default attributes
+            \Illuminate\Support\Facades\Log::warning('Failed to parse placeholder attributes: ' . $th->getMessage());
         }
         return $attributes;
     }
@@ -155,9 +155,9 @@ trait EditableTrait{
         return $this->placeholders;
     }
 
-    public function setPlaceholder($placeolder, $content)
+    public function setPlaceholder($placeholder, $content)
     {
-        $this->placeholders[$placeolder] = $content;
+        $this->placeholders[$placeholder] = $content;
 
         return $this;
     }

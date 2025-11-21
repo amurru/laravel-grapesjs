@@ -3,16 +3,16 @@ export default (editor, opts = {}) => {
     id: 'save',
     className: 'fa fa-save',
     command(editor) {
-      editor.store(res => {
-        editor.runCommand('notify',{
+      editor.store((res) => {
+        editor.runCommand('notify', {
           type: 'success',
           title: 'Success',
-          message: "Page Saved Successfully"
-        })
+          message: 'Page Saved Successfully',
+        });
       });
     },
     attributes: {
-      title: 'Save'
-    }
+      title: 'Save',
+    },
   });
 };

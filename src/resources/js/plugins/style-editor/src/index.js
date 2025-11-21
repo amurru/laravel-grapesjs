@@ -2,9 +2,9 @@ export default (editor, opts = {}) => {
   const COMMAND_ID = 'css-edit';
   let div, codeViewer, timer;
 
-  let setCanvasWidth = w => {
-    const canvas = document.querySelector(".gjs-cv-canvas");
-    const panel = document.querySelector(".gjs-pn-views-container");
+  let setCanvasWidth = (w) => {
+    const canvas = document.querySelector('.gjs-cv-canvas');
+    const panel = document.querySelector('.gjs-pn-views-container');
 
     let canvas_width = w;
     let panel_width = 100 - w;
@@ -16,60 +16,68 @@ export default (editor, opts = {}) => {
   let updateCodeViewerContent = () => codeViewer && codeViewer.setContent(editor.getCss());
 
   let setEventListners = (div) => {
-    div.querySelector('.jd-expand-handle').addEventListener('click', function(e){
+    div.querySelector('.jd-expand-handle').addEventListener('click', function (e) {
       let handle = e.target;
 
       setCanvasWidth(handle.classList.contains('active') ? 85 : 50);
-      handle.classList.toggle('active')
+      handle.classList.toggle('active');
     });
 
     codeViewer.editor.on('changes', (e, changes) => {
-      if(changes.length == 1 && changes[0].origin != "setValue"){
+      if (changes.length == 1 && changes[0].origin != 'setValue') {
         clearTimeout(timer);
 
         timer = setTimeout(() => {
           editor.setStyle(e.getValue());
         }, 500);
       }
-    })
-    
-    function resize(e){
-      const container = document.querySelector(".gjs-pn-views-container");
-      const canvas = document.querySelector(".gjs-cv-canvas");
-      const item = div.querySelector(".CodeMirror");
+    });
+
+    function resize(e) {
+      const container = document.querySelector('.gjs-pn-views-container');
+      const canvas = document.querySelector('.gjs-cv-canvas');
+      const item = div.querySelector('.CodeMirror');
 
       let height = e.pageY - item.getBoundingClientRect().top - 4;
-      let container_width = 100 - Math.ceil(e.clientX / window.innerWidth * 100);
+      let container_width = 100 - Math.ceil((e.clientX / window.innerWidth) * 100);
       let canvas_width = 100 - container_width;
 
       item.style.width = `100%`;
-      if(height >= 300){
+      if (height >= 300) {
         item.style.height = `${height}px`;
       }
 
-      if(container_width >= 15){
+      if (container_width >= 15) {
         canvas.style.width = `${canvas_width}%`;
         container.style.width = `${container_width}%`;
       }
     }
 
-    div.querySelector('.gjs-input-holder i').addEventListener("mousedown", function(e){
-      document.addEventListener("mousemove", resize, false);
-    }, false);
+    div.querySelector('.gjs-input-holder i').addEventListener(
+      'mousedown',
+      function (e) {
+        document.addEventListener('mousemove', resize, false);
+      },
+      false
+    );
 
-    document.addEventListener("mouseup", function(){
-        document.removeEventListener("mousemove", resize, false);
-    }, false);
+    document.addEventListener(
+      'mouseup',
+      function () {
+        document.removeEventListener('mousemove', resize, false);
+      },
+      false
+    );
   };
 
   let initCodeViewer = () => {
-    if(div) return;
+    if (div) return;
 
     codeViewer = editor.CodeManager.getViewer('CodeMirror').clone();
 
-    div = document.createElement('div')
+    div = document.createElement('div');
     div.classList.add('jd-style-editor');
-    div.innerHTML= `
+    div.innerHTML = `
       <div>
         <i class="jd-expand-handle fa fa-arrows-h"></i>
         <div class="gjs-trt-header">Update styles</div>
@@ -83,7 +91,7 @@ export default (editor, opts = {}) => {
         </div>
       </div>
     `;
-  
+
     codeViewer.set({
       codeName: 'css',
       readOnly: 0,
@@ -101,9 +109,7 @@ export default (editor, opts = {}) => {
 
     setEventListners(div);
 
-    editor
-      .Panels
-      .getPanel('views-container')
+    editor.Panels.getPanel('views-container')
       .set('appendContent', div)
       .trigger('change:appendContent');
   };
@@ -111,20 +117,20 @@ export default (editor, opts = {}) => {
   editor.on('update', updateCodeViewerContent);
 
   editor.Commands.add(COMMAND_ID, {
-    run(editor, sender){    
+    run(editor, sender) {
       initCodeViewer();
       updateCodeViewerContent();
       div.style.display = 'block';
     },
 
-    stop(editor, sender){ 
-      if(div){
+    stop(editor, sender) {
+      if (div) {
         setCanvasWidth(85);
-        div.querySelector('.jd-expand-handle').classList.remove('active')
+        div.querySelector('.jd-expand-handle').classList.remove('active');
 
         div.style.display = 'none';
       }
-    }
+    },
   });
 
   editor.Panels.addButton('views', {
@@ -132,7 +138,7 @@ export default (editor, opts = {}) => {
     className: 'fa fa-css3',
     command: COMMAND_ID,
     attributes: {
-      title: 'Modify styles'
+      title: 'Modify styles',
     },
     active: false,
   });

@@ -1,7 +1,7 @@
 export default (editor, options = {}) => {
   const opts = {
     ...{
-      proxy_url : null,
+      proxy_url: null,
 
       proxy_url_input: 'file',
 
@@ -10,7 +10,7 @@ export default (editor, options = {}) => {
       config: {
         includeUI: {
           initMenu: 'filter',
-        }
+        },
       },
 
       // Pass the editor constructor. By default, the `tui.ImageEditor` will be called
@@ -60,7 +60,7 @@ export default (editor, options = {}) => {
 
       // The apply button (HTMLElement) will be passed as an argument to this function, once created.
       // This will allow you a higher customization.
-      onApplyButton: () => { },
+      onApplyButton: () => {},
 
       // The TOAST UI editor isn't compiled with icons, so generally, you should download them and indicate
       // the local path in the `includeUI.theme` configurations.
@@ -81,18 +81,30 @@ export default (editor, options = {}) => {
         'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.7/fabric.js',
         'https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js',
         'https://uicdn.toast.com/tui-color-picker/v2.2.0/tui-color-picker.min.js',
-        'https://uicdn.toast.com/tui-image-editor/v3.4.0/tui-image-editor.js'
+        'https://uicdn.toast.com/tui-image-editor/v3.4.0/tui-image-editor.js',
       ],
 
       // In case the script is loaded this style will be loaded too
       style: [
         'https://uicdn.toast.com/tui-color-picker/v2.2.0/tui-color-picker.min.css',
-        'https://uicdn.toast.com/tui-image-editor/v3.4.0/tui-image-editor.min.css'
+        'https://uicdn.toast.com/tui-image-editor/v3.4.0/tui-image-editor.min.css',
       ],
-    }, ...options
+    },
+    ...options,
   };
 
-  const { script, style, height, width, hideHeader, icons, onApply, upload, addToAssets, commandId } = opts;
+  const {
+    script,
+    style,
+    height,
+    width,
+    hideHeader,
+    icons,
+    onApply,
+    upload,
+    addToAssets,
+    commandId,
+  } = opts;
   const getConstructor = () => opts.constructor || (window.tui && window.tui.ImageEditor);
   let constr = getConstructor();
 
@@ -101,7 +113,7 @@ export default (editor, options = {}) => {
     const { head } = document;
     const scripts = Array.isArray(script) ? [...script] : [script];
     const styles = Array.isArray(style) ? [...style] : [style];
-    const appendStyle = styles => {
+    const appendStyle = (styles) => {
       if (styles.length) {
         const link = document.createElement('link');
         link.href = styles.shift();
@@ -109,8 +121,8 @@ export default (editor, options = {}) => {
         head.appendChild(link);
         appendStyle(styles);
       }
-    }
-    const appendScript = scripts => {
+    };
+    const appendScript = (scripts) => {
       if (scripts.length) {
         const scr = document.createElement('script');
         scr.src = scripts.shift();
@@ -119,7 +131,7 @@ export default (editor, options = {}) => {
       } else {
         constr = getConstructor();
       }
-    }
+    };
     appendStyle(styles);
     appendScript(scripts);
   }
@@ -132,7 +144,7 @@ export default (editor, options = {}) => {
       initToolbar() {
         typeImage.prototype.initToolbar.apply(this, arguments);
         const tb = this.get('toolbar');
-        const tbExists = tb.some(item => item.command === commandId);
+        const tbExists = tb.some((item) => item.command === commandId);
 
         if (!tbExists) {
           tb.unshift({
@@ -141,9 +153,9 @@ export default (editor, options = {}) => {
           });
           this.set('toolbar', tb);
         }
-      }
-    }
-  })
+      },
+    },
+  });
 
   // Add the image editor command
   editor.Commands.add(commandId, {
@@ -164,7 +176,8 @@ export default (editor, options = {}) => {
       const title = opts.labelImageEditor;
       const btn = content.children[1];
       ed.Modal.open({ title, content })
-        .getModel().once('change:open', () => ed.stopCommand(id));
+        .getModel()
+        .once('change:open', () => ed.stopCommand(id));
       this.imageEditor = new constr(content.children[0], this.getEditorConfig());
       ed.getModel().setEditing(1);
       btn.onclick = () => this.applyChanges();
@@ -181,8 +194,8 @@ export default (editor, options = {}) => {
       const config = { ...opts.config };
       let path = this.target.get('src');
 
-      if ( opts.proxy_url && !path.startsWith('data:')){
-        path = `${opts.proxy_url}?${opts.proxy_url_input}=${encodeURI(path)}`
+      if (opts.proxy_url && !path.startsWith('data:')) {
+        path = `${opts.proxy_url}?${opts.proxy_url_input}=${encodeURI(path)}`;
       }
 
       if (!config.includeUI) config.includeUI = {};
@@ -193,10 +206,11 @@ export default (editor, options = {}) => {
         uiSize: { height, width },
       };
       if (hideHeader) config.includeUI.theme['header.display'] = 'none';
-      if (icons) config.includeUI.theme = {
-        ...config.includeUI.theme,
-        ...icons,
-      }
+      if (icons)
+        config.includeUI.theme = {
+          ...config.includeUI.theme,
+          ...icons,
+        };
 
       return config;
     },
@@ -245,18 +259,22 @@ export default (editor, options = {}) => {
       const dataURL = imageEditor.toDataURL();
       if (upload) {
         const file = this.dataUrlToBlob(dataURL);
-        am.FileUploader().uploadFile({
-          dataTransfer: { files: [file] }
-        }, res => {
-          const obj = res && res.data && res.data[0];
-          const src = obj && (typeof obj === 'string' ? obj : obj.src);
-          src && this.applyToTarget(src);
-        });
+        am.FileUploader().uploadFile(
+          {
+            dataTransfer: { files: [file] },
+          },
+          (res) => {
+            const obj = res && res.data && res.data[0];
+            const src = obj && (typeof obj === 'string' ? obj : obj.src);
+            src && this.applyToTarget(src);
+          }
+        );
       } else {
-        addToAssets && am.add({
-          src: dataURL,
-          name: (target.get('src') || '').split('/').pop(),
-        });
+        addToAssets &&
+          am.add({
+            src: dataURL,
+            name: (target.get('src') || '').split('/').pop(),
+          });
         this.applyToTarget(dataURL);
       }
     },

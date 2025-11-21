@@ -21,17 +21,17 @@ class EditorController extends Controller
         }
     }
 
-    public function editor(Request $request, $model, $id)
+    public function editor(Request $request, $model, $id): \Illuminate\View\View
     {
         return $this->show_gjs_editor($request, $model::findOrFail($id));
     }
     
-    public function store(Request $request, $model, $id)
+    public function store(Request $request, $model, $id): \Illuminate\Http\Response
     {
         return $this->store_gjs_data($request, $model::findOrFail($id));
     }
 
-    public function templates(Request $request, $model, $id)
+    public function templates(Request $request, $model, $id): \Illuminate\Support\Collection
     {
         $model = $model::findOrFail($id);
 
@@ -83,7 +83,6 @@ class EditorController extends Controller
 
                     $content = view("laravel-grapesjs::{$view_base}{$file_name}")->render();
 
-                    // dd($content);
                     $templates [] = [
                         'id' => $id_prefix . $fileInfo->getFilename(),
                         'category' => $category,

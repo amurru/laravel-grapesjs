@@ -1,31 +1,31 @@
 export default (editor, opts = {}) => {
-  editor.BlockManager.add("iframe", {
+  editor.BlockManager.add('iframe', {
     category: 'Basic',
-    label: "iframe",
-    type: "iframe",
-    content: "<iframe> </iframe>",
+    label: 'iframe',
+    type: 'iframe',
+    content: '<iframe> </iframe>',
     selectable: true,
     attributes: { class: 'fa fa-file' },
   });
 
-  editor.DomComponents.addType("iframe", {
-    isComponent: el => el.tagName === "IFRAME",
+  editor.DomComponents.addType('iframe', {
+    isComponent: (el) => el.tagName === 'IFRAME',
     model: {
       defaults: {
-        type: "iframe",
+        type: 'iframe',
         traits: [
           {
-            type: "text",
-            label: "src",
-            name: "src"
-          }
-        ]
-      }
-    }
+            type: 'text',
+            label: 'src',
+            name: 'src',
+          },
+        ],
+      },
+    },
   });
 
   editor.DomComponents.addType('image', {
-    isComponent: el => el.tagName == 'IMG',
+    isComponent: (el) => el.tagName == 'IMG',
     model: {
       defaults: {
         traits: [
@@ -38,9 +38,8 @@ export default (editor, opts = {}) => {
             text: 'Choose Image',
             full: true, // Full width button
             command: function (editor) {
-              editor.getSelected().trigger('active')
+              editor.getSelected().trigger('active');
             },
-
           },
           'alt',
         ],

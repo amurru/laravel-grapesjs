@@ -11,7 +11,7 @@ class AssetController extends Controller
 {
     use ValidatesRequests;
 
-    public function index(AssetRepository $assetRepository)
+    public function index(AssetRepository $assetRepository): \Illuminate\Http\JsonResponse
     {
         return response()->json(
             $assetRepository->getAllMediaLinks()
@@ -24,7 +24,7 @@ class AssetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, AssetRepository $assetRepository)
+    public function store(Request $request, AssetRepository $assetRepository): \Illuminate\Http\JsonResponse
     {
         $this->validate($request, [
             'file' => 'required|array',
@@ -36,10 +36,14 @@ class AssetController extends Controller
         ]);
     }
 
-    public function proxy(Request $request)
+    public function proxy(Request $request): void
     {
         try {
-            $file = $request->get('file');
+            $validated = $request->validate([
+                'file' => 'required|string|url'
+            ]);
+
+            $file = $validated['file'];
 
             [$url, $isLocal] = $this->replaceLocalUrlToFilePath($file);
 
@@ -59,8 +63,8 @@ class AssetController extends Controller
             header('Content-Disposition: inline; filename="' . basename($url) . '"');
             header('Cache-Control: ' . (isset($headers['Cache-Control']) ? $headers['Cache-Control'] : 'must-revalidate'));
             header('Pragma: public');
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Methods: *');
+            header('Access-Control-Allow-Origin: ' . request()->getSchemeAndHttpHost());
+            header('Access-Control-Allow-Methods: GET, OPTIONS');
             header("Access-Control-Allow-Headers: X-Requested-With");
             if (isset($headers['Content-Length'])) {
                 header('Content-Length: ' . $headers['Content-Length']);
@@ -73,11 +77,20 @@ class AssetController extends Controller
         }
     }
 
-    private function replaceLocalUrlToFilePath($url)
+    private function replaceLocalUrlToFilePath(string $url): array
     {
         $urlParts = parse_url($url);
-        if ($urlParts['host'] == 'localhost') {
-            return [public_path($urlParts['path']), true];
+        if ($urlParts['host'] === 'localhost' && isset($urlParts['path'])) {
+            $path = $urlParts['path'];
+
+            // Prevent directory traversal attacks
+            $realPath = realpath(public_path($path));
+            $publicPath = realpath(public_path());
+
+            // Ensure the file is within the public directory
+            if ($realPath && str_starts_with($realPath, $publicPath)) {
+                return [$realPath, true];
+            }
         }
 
         return [$url, false];

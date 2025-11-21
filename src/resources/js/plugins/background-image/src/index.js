@@ -9,7 +9,7 @@ export default (editor, opts = {}) => {
     run: (editor, sender) => setModalContent(),
   });
 
-  let setModalContent = content => {
+  let setModalContent = (content) => {
     modal.setTitle('Change Background settings');
 
     modal.setContent('');
@@ -18,7 +18,7 @@ export default (editor, opts = {}) => {
     !content && bindEventHandlers();
 
     modal.open();
-  }
+  };
 
   let createModalContent = () => {
     let fields = [
@@ -44,7 +44,17 @@ export default (editor, opts = {}) => {
         name: 'background-position',
         title: 'Position',
         type: 'select',
-        options: ['left top', 'left center', 'left bottom', 'right top', 'right center', 'right bottom', 'center top', 'center center', 'center bottom'],
+        options: [
+          'left top',
+          'left center',
+          'left bottom',
+          'right top',
+          'right center',
+          'right bottom',
+          'center top',
+          'center center',
+          'center bottom',
+        ],
       },
       {
         name: 'background-attachment',
@@ -61,14 +71,15 @@ export default (editor, opts = {}) => {
     ];
 
     let styles = editor.getSelected().getStyle();
-    let fields_html = fields.map(field => {
-      let { name, title, type, options, full_width } = field,
-        field_html = '',
-        isImage = type == 'image',
-        value = styles[name] || null;
+    let fields_html = fields
+      .map((field) => {
+        let { name, title, type, options, full_width } = field,
+          field_html = '',
+          isImage = type == 'image',
+          value = styles[name] || null;
 
-      if (isImage) {
-        field_html = `
+        if (isImage) {
+          field_html = `
           <div class="gjs-sm-field gjs-sm-file">
               <div id="gjs-sm-input-holder">
                   <div class="gjs-sm-btn-c">
@@ -86,22 +97,22 @@ export default (editor, opts = {}) => {
               </div>
           </div>
         `;
-      } else if (type == 'color') {
-        field_html = `
+        } else if (type == 'color') {
+          field_html = `
           <div class="gjs-field gjs-field-color">
             <div class="gjs-input-holder">
               <input type="color" placeholder="black" class="jd-bg-setting ${name}" data-property="${name}" value="${value}">
             </div>
           </div>
         `;
-      } else if (type == 'select') {
-        let options_html = '';
+        } else if (type == 'select') {
+          let options_html = '';
 
-        (options || []).forEach(option => {
-          options_html += `<option value="${option}" ${value == option ? 'selected' : ''}>${option}</option>`;
-        });
+          (options || []).forEach((option) => {
+            options_html += `<option value="${option}" ${value == option ? 'selected' : ''}>${option}</option>`;
+          });
 
-        field_html = `
+          field_html = `
           <div class="gjs-field gjs-select">
               <span id="gjs-sm-input-holder">
                   <select class="jd-bg-setting ${name}" data-property="${name}" >
@@ -113,9 +124,9 @@ export default (editor, opts = {}) => {
               </div>
           </div>
         `;
-      }
+        }
 
-      return `
+        return `
         <div class="gjs-sm-property gjs-sm-file gjs-sm-property__${name} ${full_width ? 'gjs-sm-property--full' : ''}">
             <div class="gjs-sm-label">
                 <span class="gjs-sm-icon " title="${title}">
@@ -130,7 +141,8 @@ export default (editor, opts = {}) => {
             </div>
         </div>
       `;
-    }).join('');
+      })
+      .join('');
 
     return `
       <div class="gjs-sm-properties jd-bg-settings">${fields_html}</div>
@@ -140,21 +152,22 @@ export default (editor, opts = {}) => {
   let bindEventHandlers = () => {
     let elements = document.querySelectorAll('.jd-bg-settings .jd-bg-setting[data-property]');
 
-    elements.forEach(element => {
+    elements.forEach((element) => {
       let property = element.dataset.property;
 
       if (property == BG_IMAGE) {
         element.addEventListener('click', () => openAssetModal(property));
-        let previewClose = document.querySelector(`.jd-bg-settings .jd-bg-setting.${property}-preview #gjs-sm-close svg`);
+        let previewClose = document.querySelector(
+          `.jd-bg-settings .jd-bg-setting.${property}-preview #gjs-sm-close svg`
+        );
 
-        previewClose.addEventListener('click', e => setSelectedComponentStyle(property));
+        previewClose.addEventListener('click', (e) => setSelectedComponentStyle(property));
       } else {
         element.addEventListener('change', function (e) {
           setSelectedComponentStyle(property, this.value);
         });
       }
     });
-
   };
 
   let openAssetModal = (property) => {
@@ -169,7 +182,7 @@ export default (editor, opts = {}) => {
         setModalContent(oldContent);
 
         setSelectedComponentStyle(property, asset.getSrc());
-      }
+      },
     });
   };
 
@@ -177,8 +190,9 @@ export default (editor, opts = {}) => {
     let styles = editor.getSelected().getStyle();
 
     if (property == BG_IMAGE) {
-
-      let previewContainer = document.querySelector(`.jd-bg-settings .jd-bg-setting.${property}-preview`);
+      let previewContainer = document.querySelector(
+        `.jd-bg-settings .jd-bg-setting.${property}-preview`
+      );
       let preview = previewContainer.firstElementChild;
 
       if (value) {
@@ -205,13 +219,13 @@ export default (editor, opts = {}) => {
     const component = editor.getSelected();
     const toolbar = component.get('toolbar');
 
-    const commandExists = toolbar.some(item => item.command === COMMAND_ID);
+    const commandExists = toolbar.some((item) => item.command === COMMAND_ID);
 
     // if it doesn't already exist, add it
     if (!commandExists && !component.is('image') && component.get('tagName') !== 'body') {
       let tool = {
-        attributes: { 'class': TOOL_ICON },
-        command: COMMAND_ID
+        attributes: { class: TOOL_ICON },
+        command: COMMAND_ID,
       };
 
       toolbar.splice(-2, 0, tool);

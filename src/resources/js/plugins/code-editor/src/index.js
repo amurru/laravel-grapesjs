@@ -7,7 +7,7 @@ export default (editor, opts = {}) => {
       message: 'Code chagnes Applied.',
       btn_text: 'Save',
     },
-    ...opts
+    ...opts,
   };
 
   let stylePrefix = editor.getConfig().stylePrefix;
@@ -27,7 +27,7 @@ export default (editor, opts = {}) => {
     lineWrapping: true,
     styleActiveLine: true,
     smartIndent: true,
-    indentWithTabs: true
+    indentWithTabs: true,
   });
 
   btnEdit.innerHTML = options.model.btn_text;
@@ -44,11 +44,11 @@ export default (editor, opts = {}) => {
 
     modal.close();
 
-    editor.runCommand('notify',{
+    editor.runCommand('notify', {
       type: 'info',
       title: 'Success',
       message: options.model.message,
-    })
+    });
   };
 
   editor.Commands.add('html-edit', {
@@ -71,7 +71,7 @@ export default (editor, opts = {}) => {
 
       modal.open();
       viewer.refresh();
-    }
+    },
   });
 
   editor.Panels.addButton('options', {
@@ -79,7 +79,7 @@ export default (editor, opts = {}) => {
     className: options.btn_icon,
     command: 'html-edit',
     attributes: {
-      title: options.btn_title
-    }
+      title: options.btn_title,
+    },
   });
 };

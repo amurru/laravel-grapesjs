@@ -1,6 +1,6 @@
 # Laravel Grapesjs Editor
 
-This package provide an easy way to integrate [GrapesJS](https://grapesjs.com/) into your Laravel project.
+This package provides an easy way to integrate [GrapesJS](https://grapesjs.com/) into your Laravel project.
 
 ## Requirements
 
@@ -114,17 +114,17 @@ class PageController extends Controller
 
 ## Placeholders
 
-Placeholders are like short-code in wordpress. The synax of placeholder is
+Placeholders are like short-code in wordpress. The syntax of placeholder is
 
 > `[[This-Is-Placeholder]]`
 
 Create a file named "this-is-placeholder.blade.php" in "/resources/views/vendor/laravel-grapesjs/placeholders" directory.
 
-The the placeholder will be replaced by the content of the relative blade file "this-is-placeholder.blade.php"
+The placeholder will be replaced by the content of the relative blade file "this-is-placeholder.blade.php"
 
 ## Templates
 
-You can create global templates (or blocks) in the "/resources/views/vendor/laravel-grapesjs/templates" directory. And the templates/blocks will be availabe in the block section of edittor. You can also create model specific templates/blocks by defining getTemplatesPath/getGjsBlocksPath in model
+You can create global templates (or blocks) in the "/resources/views/vendor/laravel-grapesjs/templates" directory. And the templates/blocks will be available in the block section of editor. You can also create model specific templates/blocks by defining getTemplatesPath/getGjsBlocksPath in model
 
 ```php
 public function getTemplatesPath(){ return 'pages_templates'; }

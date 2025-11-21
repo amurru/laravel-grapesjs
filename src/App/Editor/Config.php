@@ -53,8 +53,7 @@ class Config
         $this->style = $editable->styles;
 
         $this->initStylesAndScripts();
-        
-        // dd($this->toArray());
+
         return $this;
     }
     

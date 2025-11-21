@@ -10,14 +10,14 @@ export default (editor, opts = {}) => {
     id: 'cancel',
     className: options.icon,
     command(editor) {
-      if(options.link){
+      if (options.link) {
         window.location = options.link;
-      }else{
-        window.history.back()
+      } else {
+        window.history.back();
       }
     },
     attributes: {
-      title: options.title
-    }
+      title: options.title,
+    },
   });
 };

@@ -3,20 +3,20 @@ export default (editor, opts = {}) => {
     id: 'loader',
     container: 'body',
     styles: {
-      "left": "0",
-      "top": "0",
-      "background-color": "white",
-      "opacity": "0.7",
-      "position": "absolute",
-      "align-items": "center",
-      "justify-content": "center",
-      "width": "100%",
-      "height": "100%",
-      "font-size": "36pt",
-      "display": "flex",
-      "z-index": "100",
+      left: '0',
+      top: '0',
+      'background-color': 'white',
+      opacity: '0.7',
+      position: 'absolute',
+      'align-items': 'center',
+      'justify-content': 'center',
+      width: '100%',
+      height: '100%',
+      'font-size': '36pt',
+      display: 'flex',
+      'z-index': '100',
     },
-    ...opts
+    ...opts,
   };
 
   let container = document.querySelector(options.container);
@@ -37,7 +37,7 @@ export default (editor, opts = {}) => {
       container.append(loader);
       container.style.position = 'relative';
     }
-  })
+  });
 
   commands.add('hide-loader', (editor, sender, opts) => {
     if (container) {
@@ -45,13 +45,13 @@ export default (editor, opts = {}) => {
       let loaderElement = document.querySelector(`${options.container} #loader`);
       loaderElement && loaderElement.remove();
     }
-  })
+  });
 
   editor.on('storage:start', () => {
-    editor.runCommand('show-loader')
-  })
+    editor.runCommand('show-loader');
+  });
 
   editor.on('storage:end', () => {
-    editor.runCommand('hide-loader')
-  })
+    editor.runCommand('hide-loader');
+  });
 };

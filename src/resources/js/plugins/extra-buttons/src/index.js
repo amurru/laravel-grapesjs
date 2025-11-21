@@ -6,7 +6,7 @@ export default (editor, opts = {}) => {
       attributes: {
         title: 'Undo',
       },
-      command: e => e.runCommand('core:undo'),
+      command: (e) => e.runCommand('core:undo'),
     },
     {
       id: 'redo',
@@ -14,7 +14,7 @@ export default (editor, opts = {}) => {
       attributes: {
         title: 'Redo',
       },
-      command: e => e.runCommand('core:redo'),
+      command: (e) => e.runCommand('core:redo'),
     },
     {
       id: 'canvas-clear',
@@ -22,10 +22,10 @@ export default (editor, opts = {}) => {
       attributes: {
         title: 'Clear Canvas',
       },
-      command: e => {
-        if(confirm('Are you sure to clean the canvas?')) {
+      command: (e) => {
+        if (confirm('Are you sure to clean the canvas?')) {
           e.DomComponents.clear();
-          setTimeout(() => localStorage.clear(), 0)
+          setTimeout(() => localStorage.clear(), 0);
         }
       },
     },

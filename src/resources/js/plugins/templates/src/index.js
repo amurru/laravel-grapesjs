@@ -1,19 +1,19 @@
 export default (editor, opts = {}) => {
-  const options = { 
+  const options = {
     url: null,
-    ...opts 
+    ...opts,
   };
 
   if (options.url) {
     fetch(options.url)
-      .then(resp => resp.json())
-      .then(data => {
-        data.forEach(block => {
+      .then((resp) => resp.json())
+      .then((data) => {
+        data.forEach((block) => {
           editor.BlockManager.add('block-' + block.id, block);
         });
       })
-      .catch(error => {
-        console.log(error);
-      })
+      .catch((error) => {
+        console.error('Failed to load templates:', error);
+      });
   }
 };

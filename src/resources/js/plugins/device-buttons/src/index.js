@@ -1,7 +1,7 @@
 export default (editor, opts = {}) => {
   editor.getConfig().showDevices = 0;
   editor.Panels.addPanel({
-    id: 'devices-c', 
+    id: 'devices-c',
     buttons: [
       {
         id: 'set-device-desktop',
@@ -9,7 +9,7 @@ export default (editor, opts = {}) => {
         attributes: {
           title: 'Desktop',
         },
-        command: e => e.setDevice('Desktop'),
+        command: (e) => e.setDevice('Desktop'),
       },
       {
         id: 'set-device-tablet',
@@ -17,7 +17,7 @@ export default (editor, opts = {}) => {
         attributes: {
           title: 'Tablet',
         },
-        command: e => e.setDevice('Tablet'),
+        command: (e) => e.setDevice('Tablet'),
       },
       {
         id: 'set-device-mobile',
@@ -25,8 +25,8 @@ export default (editor, opts = {}) => {
         attributes: {
           title: 'Mobile',
         },
-        command: e => e.setDevice('Mobile portrait'),
+        command: (e) => e.setDevice('Mobile portrait'),
       },
-    ]
+    ],
   });
 };
