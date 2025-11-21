@@ -36,7 +36,10 @@ class GrapesjsServiceProvider extends ServiceProvider
         $this->setupRoutes($this->app->router);
 
         if ($this->app->runningInConsole()) {
-            $this->publishFiles();            
+            $this->publishFiles();
+            $this->commands([
+                \Dotlogics\Grapesjs\App\Console\Commands\MigratePluginsCommand::class,
+            ]);
         }
 
         $this->setupViewDirectives();

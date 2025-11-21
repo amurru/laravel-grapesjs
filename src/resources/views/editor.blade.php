@@ -11,9 +11,21 @@
     {{-- Load Vite assets if any are detected --}}
     @php
         $viteAssets = [];
-        foreach (array_merge($editorConfig->getStyles(), $editorConfig->getScripts()) as $asset) {
+        $regularAssets = ['styles' => [], 'scripts' => []];
+
+        foreach ($editorConfig->getStyles() as $asset) {
             if (str_starts_with($asset, 'src/resources/')) {
                 $viteAssets[] = $asset;
+            } else {
+                $regularAssets['styles'][] = $asset;
+            }
+        }
+
+        foreach ($editorConfig->getScripts() as $asset) {
+            if (str_starts_with($asset, 'src/resources/')) {
+                $viteAssets[] = $asset;
+            } else {
+                $regularAssets['scripts'][] = $asset;
             }
         }
     @endphp
@@ -22,10 +34,8 @@
         @vite($viteAssets)
     @endif
 
-    @foreach ($editorConfig->getStyles() as $style)
-        @if(!str_starts_with($style, 'src/resources/'))
-            <link rel="stylesheet" href="{{ asset($style) }}">
-        @endif
+    @foreach ($regularAssets['styles'] as $style)
+        <link rel="stylesheet" href="{{ asset($style) }}">
     @endforeach
 
     <style>
@@ -94,10 +104,8 @@
 <body>
     <div id="{{ str_replace('#', '', $editorConfig->container ?? 'editor') }}"></div>
     
-    @foreach ($editorConfig->getScripts() as $script)
-        @if(!str_starts_with($script, 'src/resources/'))
-            <script src="{{ asset($script) }}"></script>
-        @endif
+    @foreach ($regularAssets['scripts'] as $script)
+        <script src="{{ asset($script) }}"></script>
     @endforeach
 </body>
 </html>

@@ -109,8 +109,7 @@ class Config
      */
     protected function isUsingVite(): bool
     {
-        return file_exists(public_path('build/manifest.json')) ||
-               file_exists(public_path('vendor/laravel-grapesjs/manifest.json'));
+        return $this->pluginManager ? $this->pluginManager->isUsingVite() : false;
     }
 
     /**

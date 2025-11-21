@@ -75,7 +75,7 @@ pluginsOpts = {
   [SaveButton]: {},
   [BackButton]: {},
   [DeviceButtons]: {},
-  [PluginsLoader]: config.pluginManager.pluginsLoader,
+  [PluginsLoader]: config.pluginManager.pluginsLoader || [],
   [StyleEditor]: {},
   [LinkableImage]: {},
 };

@@ -125,6 +125,42 @@ class PluginManager
             ->toArray();
     }
 
+    /**
+     * Check if the application is using Vite for asset management.
+     */
+    public function isUsingVite(): bool
+    {
+        return file_exists(public_path('build/manifest.json')) ||
+               file_exists(public_path('vendor/laravel-grapesjs/manifest.json'));
+    }
+
+    /**
+     * Get plugins that should be loaded via ES6 modules (for Vite).
+     * These are plugins that are expected to be imported in the main app file.
+     */
+    public function getModulePlugins()
+    {
+        if (!$this->isUsingVite()) {
+            return [];
+        }
+
+        // For Vite setups, we expect plugins to be registered via the plugin registry
+        // The PluginsLoader will handle finding them in window.grapesjs.plugins
+        return $this->getPluginsLoaderOptions();
+    }
+
+    /**
+     * Get plugins that should be loaded via script tags (for non-Vite).
+     */
+    public function getScriptPlugins()
+    {
+        if ($this->isUsingVite()) {
+            return [];
+        }
+
+        return $this->getPluginsLoaderOptions();
+    }
+
     protected function getPluginStyleScript($type = 'scripts')
     {
         return collect($this->pluginsLoader)->pluck($type)->flatten()->toArray();

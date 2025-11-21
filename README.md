@@ -16,18 +16,18 @@ If your application uses Vite (default for Laravel 11+), you need to include the
 ### 1. Update your `vite.config.js`
 
 ```javascript
-import { defineConfig } from "vite";
-import laravel from "laravel-vite-plugin";
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
   plugins: [
     laravel({
       input: [
-        "resources/css/app.css",
-        "resources/js/app.js",
+        'resources/css/app.css',
+        'resources/js/app.js',
         // Add package assets
-        "vendor/laravel-grapesjs/src/resources/scss/gjs.scss",
-        "vendor/laravel-grapesjs/src/resources/js/index.js",
+        'vendor/laravel-grapesjs/src/resources/scss/gjs.scss',
+        'vendor/laravel-grapesjs/src/resources/js/index.js',
       ],
     }),
   ],
@@ -44,6 +44,85 @@ Instead of using the package's default template, create your own and include:
     'vendor/laravel-grapesjs/src/resources/js/index.js'
 ])
 ```
+
+## Migrating from Non-Experimental Versions
+
+If you're upgrading from a non-experimental version to the Vite-integrated version, you'll need to migrate your custom plugins. You can do this manually or use the automated migration command.
+
+### Automated Migration (Recommended)
+
+Run the migration command to automatically convert your plugin setup:
+
+```bash
+php artisan grapesjs:migrate-plugins
+```
+
+This command will:
+
+- Move custom plugin files from `public/js/` to `resources/js/`
+- Update your `resources/js/app.js` with proper imports
+- Modify your `vite.config.js` to include plugin files
+- Remove plugin scripts from `config/laravel-grapesjs.php`
+
+### Manual Migration
+
+If you prefer to migrate manually:
+
+1. **Move custom plugin files**
+
+   ```bash
+   # Move from public/js/ to resources/js/
+   mv public/js/custom-blocks.js resources/js/custom-blocks.js
+   ```
+
+2. **Import plugins in your main app file**
+
+   ```javascript
+   // resources/js/app.js
+   import './custom-blocks';
+   ```
+
+3. **Update vite.config.js**
+
+   ```javascript
+   input: [
+     'resources/css/app.css',
+     'resources/js/app.js',
+     'resources/js/custom-blocks.js', // Add this
+     // ... other inputs
+   ];
+   ```
+
+4. **Remove plugin scripts from config**
+
+   ```php
+   // config/laravel-grapesjs.php
+   'plugins' => [
+       'custom' => [
+           // Remove script-based plugin definitions
+           // 'my-plugin' => 'https://example.com/plugin.js',
+       ],
+   ],
+   ```
+
+5. **Update plugin registration**
+   Instead of defining plugins in config, register them in your JavaScript:
+
+   ```javascript
+   // resources/js/custom-blocks.js
+   import grapesjs from 'grapesjs';
+
+   // Register your plugin
+   grapesjs.plugins.add('my-plugin', function (editor, options) {
+     // Plugin implementation
+   });
+   ```
+
+### Troubleshooting
+
+- **Plugins not loading**: Ensure all custom plugins are imported in `resources/js/app.js`
+- **Vite build errors**: Check that all plugin files are included in `vite.config.js` input array
+- **Mixed loading**: The package supports both script-based (legacy) and module-based loading
 
 ## Installation
 
