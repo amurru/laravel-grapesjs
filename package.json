@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "axios": "^1.6.0",
-        "grapesjs": "^0.22.14",
+        "grapesjs": "^0.21.11",
         "grapesjs-blocks-basic": "^1.0.2",
         "grapesjs-blocks-bootstrap4": "^0.2.5",
         "grapesjs-tui-image-editor": "^1.0.2",
