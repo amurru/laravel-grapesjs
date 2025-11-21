@@ -1,12 +1,12 @@
 {
   "src/resources/js/gjs.js": {
-    "file": "assets/gjs-Bo_cyaZM.js",
+    "file": "assets/gjs2.js",
     "name": "gjs",
     "src": "src/resources/js/gjs.js",
     "isDynamicEntry": true
   },
   "src/resources/js/index.js": {
-    "file": "assets/index-Drr-v65E.js",
+    "file": "assets/index.js",
     "name": "index",
     "src": "src/resources/js/index.js",
     "isEntry": true,
@@ -15,7 +15,7 @@
     ]
   },
   "src/resources/scss/gjs.scss": {
-    "file": "assets/gjs-CzgxX_PF.css",
+    "file": "assets/gjs.css",
     "src": "src/resources/scss/gjs.scss",
     "isEntry": true
   }
