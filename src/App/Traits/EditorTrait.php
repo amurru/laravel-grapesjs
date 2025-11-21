@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 trait EditorTrait{
 
 	protected function show_gjs_editor(Request $request, $model): \Illuminate\View\View
+	{
 		$editorConfig = app(Config::class)->initialize($model);
 		
 		return view('laravel-grapesjs::editor', compact('editorConfig', 'model'));

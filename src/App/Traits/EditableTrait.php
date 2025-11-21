@@ -13,11 +13,13 @@ trait EditableTrait{
     }
 
     protected function getModelBaseClass(): string
+    {
         $explode = explode('\\', $this->getModelClass()) ?? ['Item'];
         return end($explode);
     }
 
     protected function getKeyValue(): mixed
+    {
         return $this->{$this->getKeyName()};
     }
 
