@@ -53,8 +53,11 @@ class PluginManager
         }
 
         if($this->imageEditor){
+            // Determine the correct dist_path based on Vite integration
+            $distPath = $this->getImageEditorDistPath();
+
             $this->imageEditor = [
-                'dist_path' => asset('vendor/laravel-grapesjs'),
+                'dist_path' => $distPath,
                 'proxy_url' => route('laravel-grapesjs.asset.proxy'),
                 'proxy_url_input' => 'file',
             ];
@@ -135,5 +138,32 @@ class PluginManager
     public function getPluginScripts()
     {
         return $this->getPluginStyleScript();
+    }
+
+    /**
+     * Get the correct dist path for image editor assets
+     * Checks for Vite integration first, then falls back to published assets
+     */
+    protected function getImageEditorDistPath(): string
+    {
+        // Check if the application is using Vite and has included package assets
+        $manifestPath = public_path('build/manifest.json');
+
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+
+            // Check if any package assets are in the Vite manifest
+            $packageAssets = array_filter(array_keys($manifest), function($key) {
+                return str_starts_with($key, 'vendor/laravel-grapesjs/');
+            });
+
+            if (!empty($packageAssets)) {
+                // Use Vite build directory for assets
+                return asset('build/');
+            }
+        }
+
+        // Fallback to published assets
+        return asset('vendor/laravel-grapesjs');
     }
 }
