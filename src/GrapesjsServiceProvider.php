@@ -77,6 +77,11 @@ class GrapesjsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/resources/views' => resource_path($this->viewDirPath),
         ], [$this->namespace, 'views']);
+
+        // Publish Vite config for applications that want to include package assets in their build
+        $this->publishes([
+            __DIR__.'/../vite.config.js' => base_path('vite.config.package.js'),
+        ], [$this->namespace, 'vite-config']);
     }
 
     protected function setupViewDirectives()

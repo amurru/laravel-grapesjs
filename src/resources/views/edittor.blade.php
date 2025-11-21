@@ -8,8 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit {{ $model->editor_page_title }}</title>
 
+    {{-- Load Vite assets if any are detected --}}
+    @php
+        $viteAssets = [];
+        foreach (array_merge($editorConfig->getStyles(), $editorConfig->getScripts()) as $asset) {
+            if (str_starts_with($asset, 'src/resources/')) {
+                $viteAssets[] = $asset;
+            }
+        }
+    @endphp
+
+    @if(!empty($viteAssets))
+        @vite($viteAssets)
+    @endif
+
     @foreach ($editorConfig->getStyles() as $style)
-        <link rel="stylesheet" href="{{ $style }}">
+        @if(!str_starts_with($style, 'src/resources/'))
+            <link rel="stylesheet" href="{{ asset($style) }}">
+        @endif
     @endforeach
 
     <style>
@@ -79,7 +95,9 @@
     <div id="{{ str_replace('#', '', $editorConfig->container ?? 'editor') }}"></div>
     
     @foreach ($editorConfig->getScripts() as $script)
-        <script src="{{ $script }}"></script>
+        @if(!str_starts_with($script, 'src/resources/'))
+            <script src="{{ asset($script) }}"></script>
+        @endif
     @endforeach
 </body>
 </html>

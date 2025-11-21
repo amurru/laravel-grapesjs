@@ -72,15 +72,68 @@ class Config
     public function getStyles()
     {
         $extraStyles = $this->pluginManager ? $this->pluginManager->getPluginStyles() : [];
-        
-        return [...$extraStyles, ...$this->styles];
+
+        // Convert package asset references to Vite-compatible paths
+        $processedStyles = array_map(function($style) {
+            // Convert laravel-grapesjs::assets/ paths to Vite source paths
+            if (str_starts_with($style, 'laravel-grapesjs::assets/')) {
+                $assetPath = str_replace('laravel-grapesjs::assets/', 'src/resources/', $style);
+                // Remove .scss extension for CSS assets
+                $assetPath = str_replace('.scss', '.css', $assetPath);
+                return $assetPath;
+            }
+            return $style;
+        }, $this->styles);
+
+        return [...$extraStyles, ...$processedStyles];
     }
 
     public function getScripts()
     {
         $extraScripts = $this->pluginManager ? $this->pluginManager->getPluginScripts() : [];
-        
-        return [...$extraScripts, ...$this->scripts];
+
+        // Convert package asset references to Vite-compatible paths
+        $processedScripts = array_map(function($script) {
+            // Convert laravel-grapesjs::assets/ paths to Vite source paths
+            if (str_starts_with($script, 'laravel-grapesjs::assets/')) {
+                $assetPath = str_replace('laravel-grapesjs::assets/', 'src/resources/', $script);
+                return $assetPath;
+            }
+            return $script;
+        }, $this->scripts);
+
+        return [...$extraScripts, ...$processedScripts];
+    }
+
+    /**
+     * Check if the application is using Vite
+     */
+    protected function isUsingVite(): bool
+    {
+        return file_exists(public_path('build/manifest.json')) ||
+               file_exists(public_path('vendor/laravel-grapesjs/manifest.json'));
+    }
+
+    /**
+     * Get Vite-resolved asset path
+     */
+    protected function resolveViteAsset(string $asset): string
+    {
+        // For package assets, we need to check if the application has included them in their Vite build
+        // If not, fall back to published assets
+        $manifestPath = public_path('build/manifest.json');
+
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+            $viteKey = 'vendor/laravel-grapesjs/' . $asset;
+
+            if (isset($manifest[$viteKey])) {
+                return asset('build/' . $manifest[$viteKey]['file']);
+            }
+        }
+
+        // Fallback to published assets
+        return asset('vendor/laravel-grapesjs/assets/' . $asset);
     }
 
     public function toJson()

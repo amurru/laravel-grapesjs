@@ -48,7 +48,8 @@ return [
     */
 
     'styles' => [
-        'vendor/laravel-grapesjs/assets/editor.css'
+        // Vite-resolved asset path - will be resolved at runtime
+        'laravel-grapesjs::assets/gjs.scss'
     ],
 
     /*
@@ -60,7 +61,8 @@ return [
     */
 
     'scripts' => [
-        'vendor/laravel-grapesjs/assets/editor.js'
+        // Vite-resolved asset path - will be resolved at runtime
+        'laravel-grapesjs::assets/index.js'
     ],
 
     /*
